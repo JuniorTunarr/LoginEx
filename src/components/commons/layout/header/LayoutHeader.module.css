@@ -1,0 +1,37 @@
+.fixed-top {
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.header {
+  position: relative !important;
+}
+
+.headerWrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  position: relative;
+  padding: 0 16px 0 5px !important;
+}
+
+.logo {
+  padding-top: 10px;
+}
+.logoImage {
+  text-decoration: none;
+  position: relative;
+  cursor: pointer !important;
+  overflow-clip-margin: content-box;
+  overflow: clip;
+}
+
+.button {
+  padding-top: 8px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  white-space: nowrap;
+}

@@ -8,6 +8,13 @@ import kakao from "@/public/assets/icons/kakako-icon.png";
 import naver from "@/public/assets/icons/naver-icon.png";
 import apple from "@/public/assets/icons/apple-icon.webp";
 import google from "@/public/assets/icons/google-icon.png";
+import {
+  getAuth,
+  isSignInWithEmailLink,
+  signInWithEmailLink,
+} from "firebase/auth";
+import router, { useRouter } from "next/router";
+
 const MainHome = styled.div`
   align-items: center;
   display: flex;
@@ -18,10 +25,12 @@ const MainHome = styled.div`
 `;
 
 export default function LoginPage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
+  // const [isModalOpen, setIsModalOpen] = useState(false);
+  const auth = getAuth();
+  const router = useRouter();
   const { data: session } = useSession();
   if (session) {
+    console.log(session);
     return (
       <>
         <MainHome>
@@ -38,59 +47,60 @@ export default function LoginPage() {
         </MainHome>
       </>
     );
-  }
-  return (
-    <>
-      <MainHome>
-        <Image
-          src={Logo}
-          alt="로고"
-          width={200}
-          height={100}
-          style={{ objectFit: "cover" }}
-          priority
-        />
-        <LoginForm />
-        <div
-          style={{ fontWeight: "bold", fontSize: 17, paddingBottom: "10px" }}>
-          SNS 계정으로 간편 로그인
-        </div>
-        <div>
+  } else {
+    return (
+      <>
+        <MainHome>
           <Image
-            src={kakao}
-            alt="카카오로그인"
-            width="35"
-            height="35"
-            style={{ margin: "10px" }}
-            onClick={() => signIn("kakao")}
+            src={Logo}
+            alt="로고"
+            width={200}
+            height={100}
+            style={{ objectFit: "cover" }}
+            priority
           />
+          <LoginForm />
+          <div
+            style={{ fontWeight: "bold", fontSize: 17, paddingBottom: "10px" }}>
+            SNS 계정으로 간편 로그인
+          </div>
+          <div>
+            <Image
+              src={kakao}
+              alt="카카오로그인"
+              width="35"
+              height="35"
+              style={{ margin: "10px" }}
+              onClick={() => signIn("kakao")}
+            />
 
-          <Image
-            src={naver}
-            alt="네이버로그인"
-            width="35"
-            height="35"
-            style={{ margin: "10px" }}
-            onClick={() => signIn("")}
-          />
-          <Image
-            src={apple}
-            alt="애플로그인"
-            width="35"
-            height="35"
-            style={{ margin: "10px" }}
-            onClick={() => signIn("")}
-          />
-          <Image
-            src={google}
-            alt="구글로그인"
-            width="35"
-            height="35"
-            style={{ margin: "10px" }}
-            onClick={() => signIn("")}
-          />
-        </div>
-      </MainHome>
-    </>
-  );
+            <Image
+              src={naver}
+              alt="네이버로그인"
+              width="35"
+              height="35"
+              style={{ margin: "10px" }}
+              onClick={() => signIn("")}
+            />
+            <Image
+              src={apple}
+              alt="애플로그인"
+              width="35"
+              height="35"
+              style={{ margin: "10px" }}
+              onClick={() => signIn("")}
+            />
+            <Image
+              src={google}
+              alt="구글로그인"
+              width="35"
+              height="35"
+              style={{ margin: "10px" }}
+              onClick={() => signIn("")}
+            />
+          </div>
+        </MainHome>
+      </>
+    );
+  }
 }

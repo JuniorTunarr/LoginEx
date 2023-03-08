@@ -1,12 +1,16 @@
+import { fbAuth } from "@/firebase.config";
+import actionCodeSettings from "@/src/commons/libs/firebase/emailAuth";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input } from "antd";
+import { sendSignInLinkToEmail } from "firebase/auth";
 import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 
 const LoginForm: React.FC = () => {
   const router = useRouter();
-
+  const [form] = Form.useForm();
+  console.log(fbAuth);
   const [btndisabled, setbtndisabled] = useState(true);
 
   const onClickSignUp = () => {
@@ -38,10 +42,7 @@ const LoginForm: React.FC = () => {
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
-    alert("아이디나 비밀번호를 잘못 입력하셨습니다. 다시 시도해 주세요.");
   };
-
-  const [form] = Form.useForm();
 
   return (
     <Form
@@ -87,9 +88,7 @@ const LoginForm: React.FC = () => {
         </Button>
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 6, span: 18 }}>
-        <Button htmlType="submit" onClick={onClickSignUp}>
-          이메일로 가입
-        </Button>
+        <Button onClick={onClickSignUp}>이메일로 가입</Button>
       </Form.Item>
       <Form.Item
         name="remember"

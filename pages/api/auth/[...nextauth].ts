@@ -7,7 +7,7 @@ import { db } from "../../../firebase.config";
 import * as firestoreFunctions from "firebase/firestore";
 import { fbAuth } from "../../../firebase.config";
 import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
-import { signIn } from "next-auth/react";
+import firebase from "firebase/app";
 
 export default NextAuth({
   providers: [

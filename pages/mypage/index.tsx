@@ -21,10 +21,14 @@ const Button = styled.button`
 
 export default function MypagePage() {
   const router = useRouter();
-  const auth = fbAuth;
-  const user = auth.currentUser;
 
-  const user_id = router.query.user_id;
+  // 파이어베이스 Auth불러오기
+  const auth = fbAuth;
+
+  // 현재 유저
+  const user = auth.currentUser;
+  console.log(user);
+
   const onClickLogout = () => {
     var result = confirm("로그아웃하시겠습니까?");
     if (result === true) {
@@ -36,9 +40,9 @@ export default function MypagePage() {
   return (
     <>
       <MainHome>
-        {user_id === "undefined" ? (
+        {!user ? (
           <Link href="/login">
-            <Button>로그인 하러가기</Button>
+            <Button>로그인</Button>
           </Link>
         ) : (
           <>

@@ -7,8 +7,7 @@ import Image from "next/image";
 import { fbAuth, createUserWithEmailAndPassword, db } from "@/firebase.config";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { collection, addDoc } from "firebase/firestore";
-import { Form } from "antd";
+import { collection, addDoc, Firestore, setDoc, doc } from "firebase/firestore";
 
 interface FormValue {
   name: string;
@@ -55,7 +54,6 @@ const StyledButton = styled.button`
 
 export default function SignUpPage() {
   const router = useRouter();
-  const [form] = Form.useForm();
   const [isValid, setIsValid] = useState(false);
   const [error, setError] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
@@ -95,29 +93,36 @@ export default function SignUpPage() {
     watch,
     formState: { errors },
   } = useForm<FormValue>({
-    mode: "onBlur",
+    mode: "onChange",
     reValidateMode: "onChange",
     resolver: yupResolver(formSchema),
   });
 
   const onSubmit = async (data: any) => {
+    console.log(data);
     try {
       if (newAccount) {
         // create account
-        const { user } = await createUserWithEmailAndPassword(
+        const createUser = await createUserWithEmailAndPassword(
           fbAuth,
           data.email,
           data.password
         );
-        const docRef = await addDoc(collection(db, "users"), {
-          name: data.name,
-          email: data.email,
-        });
+
         alert("회원가입이 완료되었습니다.");
         router.push({ pathname: "/login" });
       } else {
         alert("이미 가입된 계정이 있습니다.");
       }
+    } catch (error) {
+      setErrorFromSubmit(error.message);
+    }
+    try {
+      const docRef = await addDoc(collection(db, "users"), {
+        email: data.email,
+        name: data.name,
+      });
+      console.log("Document written with ID: ", docRef.id);
     } catch (error) {
       setErrorFromSubmit(error.message);
     }

@@ -71,7 +71,7 @@ const LoginForm: React.FC = () => {
       </Form.Item>
 
       <Form.Item
-        wrapperCol={{ offset: 1, span: 24 }}
+        wrapperCol={{ offset: 1, span: 23 }}
         name="password"
         rules={[
           { min: 8, required: true, message: "비밀번호는 최소 8자리입니다" },
@@ -82,18 +82,18 @@ const LoginForm: React.FC = () => {
         />
       </Form.Item>
 
-      <Form.Item wrapperCol={{ offset: 5, span: 24 }}>
+      <Form.Item wrapperCol={{ offset: 2, span: 22 }}>
         <Button type="primary" htmlType="submit" disabled={btndisabled}>
           이메일로 로그인
         </Button>
       </Form.Item>
-      <Form.Item wrapperCol={{ offset: 6, span: 18 }}>
+      <Form.Item wrapperCol={{ offset: 4, span: 18 }}>
         <Button onClick={onClickSignUp}>이메일로 가입</Button>
       </Form.Item>
       <Form.Item
         name="remember"
         valuePropName="checked"
-        wrapperCol={{ offset: 7, span: 20 }}>
+        wrapperCol={{ offset: 3, span: 20 }}>
         <Checkbox>이메일 저장</Checkbox>
       </Form.Item>
     </Form>

@@ -28,10 +28,6 @@ export default function MypagePage() {
   const onClickLogout = () => {
     var result = confirm("로그아웃하시겠습니까?");
     if (result === true) {
-      if (typeof window !== undefined) {
-        const isLogOut = window.confirm(authMessage["auth/logout-confirm"]);
-        if (!isLogOut) return;
-      }
       router.push("/login");
     } else {
       return;

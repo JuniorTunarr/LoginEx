@@ -7,7 +7,7 @@ import { db } from "../../../firebase.config";
 import * as firestoreFunctions from "firebase/firestore";
 import { fbAuth } from "../../../firebase.config";
 import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
-import firebase from "firebase/app";
+import { signIn } from "next-auth/react";
 
 export default NextAuth({
   providers: [
@@ -24,33 +24,6 @@ export default NextAuth({
           access_type: "offline",
           response_type: "code",
         },
-      },
-    }),
-    CredentialsProvider({
-      name: "Credentials",
-      credentials: {
-        username: {
-          label: "Email",
-          type: "email",
-          placeholder: "zzz@gmail.com",
-        },
-        password: {
-          label: "Password",
-          type: "password",
-          placeholder: "영문, 숫자포함 8자~16자",
-        },
-      },
-      async authorize(
-        credentials,
-        req
-      ): Promise<{ id: number; name: string; email: string } | null> {
-        const user = { id: 1, name: "J Smith", email: "jsmith@example.com" };
-
-        if (user) {
-          return user;
-        } else {
-          return null;
-        }
       },
     }),
   ],

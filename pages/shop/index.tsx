@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-sync-scripts */
 import styled from "@emotion/styled";
 import Head from "next/head";
 import Script from "next/script";

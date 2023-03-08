@@ -69,7 +69,12 @@ function SignUpForm() {
   const [newAccount, setNewAccount] = useState(true);
   const [errorFromSubmit, setErrorFromSubmit] = useState("");
 
-  const { register, handleSubmit, errors, control } = useForm<SignUpInputType>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+  } = useForm<SignUpInputType>({
     resolver: yupResolver(signUpValidation),
     mode: "onBlur",
     reValidateMode: "onChange",
@@ -177,7 +182,7 @@ function SignUpForm() {
           name="term"
           control={control}
           defaultValue={false}
-          render={({ onChange, value }) => (
+          render={({ field: { onChange, value } }) => (
             <Checkbox
               onChange={(e) => onChange(e.target.checked)}
               checked={value}>

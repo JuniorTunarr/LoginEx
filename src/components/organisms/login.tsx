@@ -35,7 +35,7 @@ const LoginForm: React.FC = () => {
 
   const onFinish = (values: any) => {
     console.log("Success:", values);
-    router.push({ pathname: "/mypage", query: { user_id: values.id } });
+    router.push({ pathname: "/mypage" });
   };
 
   // 로그인 검증 - 실패

@@ -12,7 +12,7 @@ export default function App({
 }: AppProps) {
   return (
     <>
-      <SessionProvider session={session}>
+      <SessionProvider session={pageProps.session}>
         <Global styles={globalStyles} />
         <Layout>
           <Component {...pageProps} />

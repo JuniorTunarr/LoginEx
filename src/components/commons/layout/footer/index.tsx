@@ -34,7 +34,7 @@ const Nav = styled.nav`
 const Ul = styled.ul`
   list-style: none;
   height: 100%;
-  padding: 0px;
+  padding: 2px 0 0 0;
   margin: 0px;
   display: flex !important;
   list-style-type: disc;
@@ -63,7 +63,7 @@ const BottomButton = styled.a`
   -webkit-box-align: center;
   align-items: center;
   font-weight: 500;
-  line-height: 25px;
+  line-height: 22px;
   letter-spacing: 0px;
 `;
 export default function LayoutFooter() {
@@ -103,10 +103,10 @@ export default function LayoutFooter() {
   ];
   const onClickTab = (index: any) => {
     setCurrentTab(index);
-
-    menuArr[index].name === "마이페이지"
-      ? [alert("로그인이 필요한 페이지입니다."), router.push("/login")]
-      : router.push(menuArr[index].content);
+    router.push(menuArr[index].content);
+    // menuArr[index].name === "마이페이지";
+    // ?
+    // : router.push(menuArr[index].content);
   };
   return (
     <Wrapper>

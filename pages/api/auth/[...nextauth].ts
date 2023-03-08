@@ -1,74 +1,82 @@
 import NextAuth from "next-auth";
-import GithubProvider from "next-auth/providers/github";
+import KakaoProvider from "next-auth/providers/kakao";
 import CredentialsProvider from "next-auth/providers/credentials";
-export const authOptions = {
-  // Configure one or more authentication providers
+import GoogleProvider from "next-auth/providers/google";
+import { FirebaseAdapter } from "@next-auth/firebase-adapter";
+import { db } from "../../../firebase.config";
+import * as firestoreFunctions from "firebase/firestore";
+import { fbAuth } from "../../../firebase.config";
+import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
+import firebase from "firebase/app";
+
+export default NextAuth({
   providers: [
-    GithubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
+    KakaoProvider({
+      clientId: process.env.KAKAO_CLIENT_ID!,
+      clientSecret: process.env.KAKAO_CLIENT_SECRET!,
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
     }),
     CredentialsProvider({
-      // The name to display on the sign in form (e.g. "Sign in with...")
       name: "Credentials",
-      // `credentials` is used to generate a form on the sign in page.
-      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
-      // e.g. domain, username, password, 2FA token, etc.
-      // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
-        username: { label: "Username", type: "text", placeholder: "jsmith" },
-        password: { label: "Password", type: "password" },
+        username: {
+          label: "Email",
+          type: "email",
+          placeholder: "zzz@gmail.com",
+        },
+        password: {
+          label: "Password",
+          type: "password",
+          placeholder: "영문, 숫자포함 8자~16자",
+        },
       },
-      async authorize(credentials, req) {
-        // Add logic here to look up the user from the credentials supplied
-        const user = { id: "1", name: "J Smith", email: "jsmith@example.com" };
+      async authorize(
+        credentials,
+        req
+      ): Promise<{ id: number; name: string; email: string } | null> {
+        const user = { id: 1, name: "J Smith", email: "jsmith@example.com" };
 
         if (user) {
-          // Any object returned will be saved in `user` property of the JWT
           return user;
         } else {
-          // If you return null then an error will be displayed advising the user to check their details.
           return null;
-
-          // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
         }
       },
     }),
   ],
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
-      const isAllowedToSignIn = true;
-      if (isAllowedToSignIn) {
-        return true;
-      } else {
-        // Return false to display a default error message
+      try {
+        const googleCredential = GoogleAuthProvider.credential(
+          account?.id_token
+        );
+        const userCredential = await signInWithCredential(
+          fbAuth,
+          googleCredential
+        ).catch((e) => {
+          console.log(e);
+          return false;
+        });
+        console.log("logged in:", userCredential);
+        return userCredential ? true : false;
+      } catch (e) {
+        console.log(e);
         return false;
-        // Or you can return a URL to redirect to:
-        // return '/unauthorized'
       }
-    },
-    async redirect({ url, baseUrl }) {
-      // Allows relative callback URLs
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
-      // Allows callback URLs on the same origin
-      else if (new URL(url).origin === baseUrl) return url;
-      return baseUrl;
-    },
-    async jwt({ token, account, profile }) {
-      // Persist the OAuth access_token and or the user id to the token right after signin
-      if (account) {
-        token.accessToken = account.access_token;
-        token.id = profile.id;
-      }
-      return token;
-    },
-    async session({ session, token, user }) {
-      // Send properties to the client, like an access_token and user id from a provider.
-      session.accessToken = token.accessToken;
-      session.user.id = token.id;
-
-      return session;
     },
   },
-};
-export default NextAuth(authOptions);
+  adapter: FirebaseAdapter({
+    db: db,
+    ...firestoreFunctions,
+  }),
+});

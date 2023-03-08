@@ -9,6 +9,7 @@ export const globalStyles = css`
     -webkit-tap-highlight-color: transparent;
     background: #f5f5f5 important!;
     max-width: 500px;
+    margin: 0 auto;
     /* 폰트 다운 실패하면 뒤에껏을 순서대로 불러옴 */
     font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
   }

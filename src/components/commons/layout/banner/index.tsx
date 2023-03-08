@@ -9,6 +9,7 @@ top: 0;
     left: 0;
     right: 0;
     bottom: 0;
+    margin: 0 !important;
     position: sticky;
     z-index: 999;
     background-color: #fff;
@@ -21,7 +22,6 @@ top: 0;
 
 `;
 const ButtonWrap = styled.div`
-  align-items: center;
   flex-wrap: nowrap;
   display: flex;
   position: relative;
@@ -33,7 +33,7 @@ const ButtonWrap = styled.div`
     border: 0;
     font-size: 14px;
     height: 100%;
-    margin-right: 20px;
+    margin-right: 40px;
   }
   .focused {
     font-weight: bold;

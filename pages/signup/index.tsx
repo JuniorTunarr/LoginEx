@@ -18,7 +18,8 @@ interface FormValue {
 
 const Error = styled.div`
   color: red;
-  margin: 2px 0 10px 0;
+  font-size: 13px;
+  margin: 3px 0 5px -115px;
 `;
 const MainHome = styled.div`
   align-items: center;
@@ -33,7 +34,7 @@ const StyledForm = styled.form`
   width: 300px;
   margin-top: 20px;
   border: 1px solid gray;
-  padding: 10px 30px 30px;
+  padding: 10px 10px 10px;
   display: flex;
   flex-direction: column;
   text-align: center;
@@ -41,10 +42,11 @@ const StyledForm = styled.form`
 const StyledInput = styled.input`
   border: 0.5px solid rgb(219, 219, 219);
   padding: 10px;
+  width: 250px;
   margin-top: 10px;
 `;
 const StyledButton = styled.button`
-  margin: 20px 0px;
+  margin: 20px 20px;
   background-color: rgb(93, 93, 230);
   font-size: 16px;
   color: white;

@@ -23,9 +23,4 @@ export const globalStyles = css`
     font-family: "myfont";
     src: url("/fonts/scifibit.ttf");
   } */
-  @media screen and (max-width: 576px) {
-    * {
-      width: 100vw;
-    }
-  }
 `;

@@ -32,7 +32,7 @@ export default function Layout(props: ILayoutProps) {
   return (
     <Wrap className="root">
       <LayoutHeader />
-      <LayoutBanner />
+      {/* <LayoutBanner /> */}
       <style global jsx>{`
         html,
         body,

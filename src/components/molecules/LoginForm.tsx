@@ -1,17 +1,19 @@
-import { fbAuth } from "@/firebase.config";
-import actionCodeSettings from "@/src/commons/libs/firebase/emailAuth";
+import { fbAuth, signInWithEmailAndPassword } from "@/firebase.config";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input } from "antd";
-import { sendSignInLinkToEmail } from "firebase/auth";
+import firebase from "firebase/compat/app";
 import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
-import { useForm } from "react-hook-form";
 
 const LoginForm: React.FC = () => {
   const router = useRouter();
   const [form] = Form.useForm();
   console.log(fbAuth);
+  const [newAccount, setNewAccount] = useState(false);
   const [btndisabled, setbtndisabled] = useState(true);
+  const [registerEmail, setRegisterEmail] = useState("");
+  const [registerPassword, setRegisterPassword] = useState("");
+  const [isValidUser, setIsValidUser] = useState(false);
 
   const onClickSignUp = () => {
     router.push("/signup");
@@ -31,11 +33,30 @@ const LoginForm: React.FC = () => {
     return Promise.resolve();
   }, []);
 
-  // 로그인 검증 - 성공
+  // 로그인 검증 - 성공 . 기존 onChange -> onFinish
 
-  const onFinish = (values: any) => {
-    console.log("Success:", values);
-    router.push({ pathname: "/mypage" });
+  const onFinish = async (event) => {
+    const isValid = await signInWithEmailAndPassword(
+      fbAuth,
+      registerEmail,
+      registerPassword
+    )
+      .then(() => {
+        console.log("Signed in successfully");
+        router.push("/mypage");
+      })
+      .catch((error) => {
+        switch (error.code) {
+          case "auth/wrong-password":
+            return alert("이메일 혹은 비밀번호가 일치하지 않습니다.");
+          case "auth/user-not-found":
+            return alert("일치하는 사용자가 없습니다.");
+          case "auth/internal-error":
+            return alert("잘못된 요청입니다.");
+          default:
+            return alert("로그인에 실패 하였습니다.");
+        }
+      });
   };
 
   // 로그인 검증 - 실패
@@ -67,7 +88,11 @@ const LoginForm: React.FC = () => {
           { whitespace: true, message: "아이디는 공백만으로 만들 수 없습니다" },
           { validator: rightId },
         ]}>
-        <Input placeholder="이메일을 입력해주세요" prefix={<UserOutlined />} />
+        <Input
+          placeholder="이메일을 입력해주세요"
+          prefix={<UserOutlined />}
+          onChange={(e) => setRegisterEmail(e.target.value)}
+        />
       </Form.Item>
 
       <Form.Item
@@ -79,6 +104,7 @@ const LoginForm: React.FC = () => {
         <Input.Password
           placeholder="비밀번호를 입력해주세요"
           prefix={<LockOutlined />}
+          onChange={(e) => setRegisterPassword(e.target.value)}
         />
       </Form.Item>
 

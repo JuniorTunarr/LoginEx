@@ -4,10 +4,16 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Logo from "../../public/assets/images/top_logo.jpg";
 import Image from "next/image";
-import { fbAuth, createUserWithEmailAndPassword, db } from "@/firebase.config";
+import {
+  fbAuth,
+  createUserWithEmailAndPassword,
+  db,
+  signInWithEmailAndPassword,
+} from "@/firebase.config";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { collection, addDoc, Firestore, setDoc, doc } from "firebase/firestore";
+import { collection, addDoc, doc, serverTimestamp } from "firebase/firestore";
+import firebase from "firebase/compat/app";
 
 interface FormValue {
   name: string;
@@ -102,29 +108,31 @@ export default function SignUpPage() {
 
   const onSubmit = async (data: any) => {
     console.log(data);
+
     try {
+      let userData;
       if (newAccount) {
         // create account
-        const createUser = await createUserWithEmailAndPassword(
+        userData = await createUserWithEmailAndPassword(
           fbAuth,
           data.email,
           data.password
         );
-
+        const docRef = await addDoc(collection(db, "users"), {
+          name: data.name,
+          email: data.email,
+          timestamp: serverTimestamp(),
+        });
         alert("회원가입이 완료되었습니다.");
         router.push({ pathname: "/login" });
       } else {
+        userData = await signInWithEmailAndPassword(
+          fbAuth,
+          data.email,
+          data.password
+        );
         alert("이미 가입된 계정이 있습니다.");
       }
-    } catch (error) {
-      setErrorFromSubmit(error.message);
-    }
-    try {
-      const docRef = await addDoc(collection(db, "users"), {
-        email: data.email,
-        name: data.name,
-      });
-      console.log("Document written with ID: ", docRef.id);
     } catch (error) {
       setErrorFromSubmit(error.message);
     }

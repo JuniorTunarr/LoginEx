@@ -29,7 +29,7 @@ export default function LayoutHeader() {
                   alt="로고"
                   width={90}
                   height={30}
-                  style={{ objectFit: "cover" }}
+                  style={{ objectFit: "cover", paddingTop: "3px" }}
                   priority
                 />
               </span>

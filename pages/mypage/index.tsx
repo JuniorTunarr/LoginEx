@@ -27,12 +27,11 @@ export default function MypagePage() {
 
   // 현재 유저
   const user = auth.currentUser;
-  console.log(user);
 
-  const onClickLogout = () => {
+  const onClickLogout = async () => {
     var result = confirm("로그아웃하시겠습니까?");
     if (result === true) {
-      router.push("/login");
+      await signOut(fbAuth);
     } else {
       return;
     }
@@ -46,7 +45,7 @@ export default function MypagePage() {
           </Link>
         ) : (
           <>
-            <div>환영합니다. {user?.email}님!</div>
+            <div>환영합니다. {user && user.providerData[0].email}님!</div>
 
             <Button onClick={onClickLogout}>로그아웃</Button>
           </>

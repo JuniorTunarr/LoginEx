@@ -4,29 +4,27 @@ import styled from "@emotion/styled";
 import { useRouter } from "next/router";
 import { useState } from "react";
 const Wrapper = styled.div`
-padding-top: 15px;
-top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin: 0 !important;
-    position: sticky;
-    z-index: 999;
-    background-color: #fff;
-    display: block;
-    width: 100%,
-    height: 44px;
-    padding-bottom: 12px;
-    border-top: 0;
-    border-bottom: 1px solid #f0f1f5;
-
+  padding-top: 15px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0 !important;
+  position: sticky;
+  z-index: 999;
+  background-color: #fff;
+  display: block;
+  width: 500px;
+  height: 44px;
+  padding-bottom: 12px;
+  border-top: 0;
+  border-bottom: 1px solid #f0f1f5;
 `;
 const ButtonWrap = styled.div`
   flex-wrap: nowrap;
   display: flex;
   position: relative;
   transition: color 0.3s, background-color 0.3s;
-  margin-left: 15px;
 
   button {
     background: transparent;

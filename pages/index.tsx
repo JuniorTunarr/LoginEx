@@ -15,7 +15,6 @@ const MainHome = styled.div`
 export default function Home() {
   return (
     <>
-      <LayoutBanner />
       <MainHome>홈 화면입니당</MainHome>
     </>
   );

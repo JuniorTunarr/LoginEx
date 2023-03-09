@@ -3,7 +3,7 @@ import { useState } from "react";
 import Logo from "../../public/assets/images/top_logo.jpg";
 import Image from "next/image";
 import { signIn, useSession, signOut } from "next-auth/react";
-import LoginForm from "@/src/components/molecules/loginform";
+import LoginForm from "@/src/components/molecules/LoginForm";
 import {
   getAuth,
   isSignInWithEmailLink,

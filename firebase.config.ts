@@ -5,6 +5,11 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  initializeAuth,
+  browserLocalPersistence,
+  debugErrorMap,
+  prodErrorMap,
+  browserPopupRedirectResolver,
 } from "firebase/auth";
 
 const firebaseConfig = {
@@ -25,3 +30,10 @@ const storage = getStorage(app);
 export { app, db, storage };
 export const fbAuth = getAuth(app);
 export { createUserWithEmailAndPassword, signInWithEmailAndPassword };
+
+// export const auth = initializeAuth(app, {
+//   errorMap:
+//     process.env.NODE_ENV === "development" ? debugErrorMap : prodErrorMap,
+//   persistence: browserLocalPersistence,
+//   popupRedirectResolver: browserPopupRedirectResolver,
+// });

@@ -1,15 +1,19 @@
-import { fbAuth, signInWithEmailAndPassword } from "@/firebase.config";
+import { fbAuth } from "@/firebase.config";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input } from "antd";
-import firebase from "firebase/compat/app";
+import {
+  browserLocalPersistence,
+  setPersistence,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { useRouter } from "next/router";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const LoginForm: React.FC = () => {
   const router = useRouter();
   const [form] = Form.useForm();
   console.log(fbAuth);
-  const [newAccount, setNewAccount] = useState(false);
+
   const [btndisabled, setbtndisabled] = useState(true);
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
@@ -42,6 +46,10 @@ const LoginForm: React.FC = () => {
     )
       .then(() => {
         console.log("Signed in successfully");
+        if (typeof window !== "undefined") {
+          localStorage.setItem("id", registerEmail);
+          localStorage.setItem("name", registerPassword);
+        }
         router.push("/mypage");
       })
       .catch((error) => {

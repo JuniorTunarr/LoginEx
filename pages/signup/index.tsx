@@ -4,16 +4,14 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Logo from "../../public/assets/images/top_logo.jpg";
 import Image from "next/image";
-import {
-  fbAuth,
-  createUserWithEmailAndPassword,
-  db,
-  signInWithEmailAndPassword,
-} from "@/firebase.config";
+import { fbAuth, db } from "@/firebase.config";
 import { useRouter } from "next/router";
 import { ButtonHTMLAttributes, useState } from "react";
 import { collection, addDoc, doc, serverTimestamp } from "firebase/firestore";
-import firebase from "firebase/compat/app";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "@firebase/auth";
 
 interface FormValue {
   name: string;
@@ -39,6 +37,8 @@ const MainHome = styled.div`
   width: 500px !important;
   height: 100% !important;
 `;
+import { getAuth } from "firebase/auth";
+
 const StyledForm = styled.form`
   background-color: white;
   width: 300px;

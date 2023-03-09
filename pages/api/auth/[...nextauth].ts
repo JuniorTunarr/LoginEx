@@ -5,9 +5,9 @@ import GoogleProvider from "next-auth/providers/google";
 import { FirebaseAdapter } from "@next-auth/firebase-adapter";
 import { db } from "../../../firebase.config";
 import * as firestoreFunctions from "firebase/firestore";
-import { fbAuth } from "../../../firebase.config";
 import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
 import firebase from "firebase/app";
+import { fbAuth } from "@/firebase.config";
 
 export default NextAuth({
   providers: [

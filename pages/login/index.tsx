@@ -1,14 +1,10 @@
 import styled from "@emotion/styled";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Logo from "../../public/assets/images/top_logo.jpg";
 import Image from "next/image";
 import { signIn, useSession, signOut } from "next-auth/react";
 import LoginForm from "@/src/components/molecules/LoginForm";
-import {
-  getAuth,
-  isSignInWithEmailLink,
-  signInWithEmailLink,
-} from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import router, { useRouter } from "next/router";
 import SnsLogin from "../../src/components/molecules/SnsLogin";
 import { CloseOutlined } from "@ant-design/icons";
@@ -34,58 +30,39 @@ const CancelButton = styled(CloseOutlined)`
 
 export default function LoginPage() {
   // const [isModalOpen, setIsModalOpen] = useState(false);
-  const auth = getAuth();
+  // const auth = getAuth();
   const router = useRouter();
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
+
   const onClickCancel = () => {
     router.push("/mypage");
   };
-  if (session) {
-    console.log(session);
-    return (
-      <>
-        <MainHome>
-          <Image
-            src={Logo}
-            alt="로고"
-            width={200}
-            height={100}
-            style={{ objectFit: "cover" }}
-            priority
+  return (
+    <>
+      {" "}
+      <MainHome>
+        <CancelButton>
+          <button
+            style={{
+              backgroundColor: "transparent",
+              border: "none",
+              top: "0px",
+              left: "0px",
+            }}
+            onClick={onClickCancel}
           />
-          {session.user?.name}님 반갑습니다 <br />
-          <button onClick={() => signOut()}>로그아웃</button>
-        </MainHome>
-      </>
-    );
-  } else {
-    return (
-      <>
-        {" "}
-        <MainHome>
-          <CancelButton>
-            <button
-              style={{
-                backgroundColor: "transparent",
-                border: "none",
-                top: "0px",
-                left: "0px",
-              }}
-              onClick={onClickCancel}
-            />
-          </CancelButton>
-          <Image
-            src={Logo}
-            alt="로고"
-            width={200}
-            height={100}
-            style={{ objectFit: "cover" }}
-            priority
-          />
-          <LoginForm />
-          <SnsLogin />
-        </MainHome>
-      </>
-    );
-  }
+        </CancelButton>
+        <Image
+          src={Logo}
+          alt="로고"
+          width={200}
+          height={100}
+          style={{ objectFit: "cover" }}
+          priority
+        />
+        <LoginForm />
+        <SnsLogin />
+      </MainHome>
+    </>
+  );
 }

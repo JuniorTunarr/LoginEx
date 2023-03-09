@@ -7,7 +7,7 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import FormErrorMessage from "@/src/components/atoms/error/FormErrorMessage";
-import { fbAuth, createUserWithEmailAndPassword, db } from "@/firebase.config";
+import { createUserWithEmailAndPassword, db, fbAuth } from "@/firebase.config";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { collection, addDoc } from "firebase/firestore";

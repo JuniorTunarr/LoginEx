@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { signOut } from "firebase/auth";
-import LocalStorage from "@/src/commons/utils/LocalStorage";
+
+// Tell me why cd doesn't work
+
 const MainHome = styled.div`
   justify-content: center;
   align-items: center;

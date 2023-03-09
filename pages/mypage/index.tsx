@@ -1,10 +1,10 @@
 import styled from "@emotion/styled";
 import { fbAuth } from "@/firebase.config";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { signOut } from "firebase/auth";
-
+import Cookies from "js-cookie";
 // Tell me why cd doesn't work
 
 const MainHome = styled.div`
@@ -33,16 +33,20 @@ export default function MypagePage() {
   // const user = Auth.currentUser;
   // console.log(user);
   useEffect(() => {
-    const result = localStorage.getItem("name");
-    setNick(result);
-    setIsLogin(true);
+    const result = Cookies.get("name");
+    if (result) {
+      const resultData = result.replaceAll('"', "");
+      setNick(resultData);
+      setIsLogin(true);
+    }
   }, []);
+
   const onClickLogout = async () => {
     var result = confirm("로그아웃하시겠습니까?");
     if (result === true) {
-      localStorage.removeItem("name");
-      await signOut(Auth);
+      Cookies.remove("name");
       setIsLogin(false);
+      await signOut(Auth);
       router.push("/mypage");
     } else {
       return;
@@ -51,7 +55,7 @@ export default function MypagePage() {
   return (
     <>
       <MainHome>
-        {isLogin ? (
+        {!isLogin ? (
           <Link href="/login">
             <Button>로그인</Button>
           </Link>

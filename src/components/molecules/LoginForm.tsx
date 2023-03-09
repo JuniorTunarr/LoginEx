@@ -8,6 +8,7 @@ import {
 } from "firebase/auth";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
 const LoginForm: React.FC = () => {
   const router = useRouter();
@@ -47,8 +48,8 @@ const LoginForm: React.FC = () => {
       .then(() => {
         console.log("Signed in successfully");
         if (typeof window !== "undefined") {
-          localStorage.setItem("id", registerEmail);
-          localStorage.setItem("name", registerPassword);
+          Cookies.set("id", JSON.stringify(registerEmail));
+          Cookies.set("name", JSON.stringify(registerPassword));
         }
         router.push("/mypage");
       })

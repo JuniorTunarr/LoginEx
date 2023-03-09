@@ -49,7 +49,7 @@ export default function MypagePage() {
   return (
     <>
       <MainHome>
-        {!isLogin ? (
+        {isLogin ? (
           <Link href="/login">
             <Button>로그인</Button>
           </Link>

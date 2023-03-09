@@ -32,7 +32,7 @@ export default function Layout(props: ILayoutProps) {
   const router = useRouter();
   return (
     <Wrap className="root">
-      {router.pathname !== ("/login" || "signup") ? <LayoutHeader /> : ""}
+      {router.pathname !== ("/login" || "/signup") ? <LayoutHeader /> : ""}
       {router.pathname === "/" ? <LayoutBanner /> : ""}
       <style global jsx>{`
         html,
@@ -43,7 +43,7 @@ export default function Layout(props: ILayoutProps) {
         }
       `}</style>
       <Body>{props.children}</Body>
-      {router.pathname !== ("/login" || "signup") ? <LayoutFooter /> : ""}
+      {router.pathname !== ("/login" || "/signup") ? <LayoutFooter /> : ""}
     </Wrap>
   );
 }

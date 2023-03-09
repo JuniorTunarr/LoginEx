@@ -11,7 +11,7 @@ import {
   signInWithEmailAndPassword,
 } from "@/firebase.config";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { ButtonHTMLAttributes, useState } from "react";
 import { collection, addDoc, doc, serverTimestamp } from "firebase/firestore";
 import firebase from "firebase/compat/app";
 
@@ -20,6 +20,10 @@ interface FormValue {
   email: string;
   password: string;
   passwordConfirm: string;
+}
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  isDisabled?: boolean;
+  // other props as needed
 }
 
 const Error = styled.div`
@@ -51,13 +55,16 @@ const StyledInput = styled.input`
   width: 250px;
   margin-top: 10px;
 `;
-const StyledButton = styled.button`
+const StyledButton = styled.button<ButtonProps>`
   margin: 20px 20px;
-  background-color: rgb(93, 93, 230);
+  background-color: ${({ disabled }) =>
+    !disabled ? "rgb(93, 93, 230)" : "gray"};
   font-size: 16px;
   color: white;
   font-weight: 600;
   cursor: pointer;
+  disabled : {
+  }
 `;
 
 export default function SignUpPage() {
@@ -121,7 +128,7 @@ export default function SignUpPage() {
         const docRef = await addDoc(collection(db, "users"), {
           name: data.name,
           email: data.email,
-          timestamp: serverTimestamp(),
+          createdAt: serverTimestamp(),
         });
         alert("회원가입이 완료되었습니다.");
         router.push({ pathname: "/login" });
@@ -134,6 +141,10 @@ export default function SignUpPage() {
         alert("이미 가입된 계정이 있습니다.");
       }
     } catch (error) {
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          alert("이미 사용중인 이메일입니다.");
+      }
       setErrorFromSubmit(error.message);
     }
   };
@@ -172,8 +183,8 @@ export default function SignUpPage() {
         {errors.passwordConfirm && (
           <Error>{errors.passwordConfirm.message}</Error>
         )}
-        <StyledButton type="submit">
-          {/* disabled={errors || watch()} */} 가입하기
+        <StyledButton type="submit" disabled={Object.keys(errors).length !== 0}>
+          가입하기
         </StyledButton>
       </StyledForm>
     </MainHome>

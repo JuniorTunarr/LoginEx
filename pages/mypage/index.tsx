@@ -32,6 +32,7 @@ export default function MypagePage() {
     var result = confirm("로그아웃하시겠습니까?");
     if (result === true) {
       await signOut(fbAuth);
+      router.push("/mypage");
     } else {
       return;
     }

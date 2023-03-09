@@ -119,7 +119,8 @@ export default function LayoutFooter() {
                 onClick={() => onClickTab(index)}
                 className={styles.Button}>
                 {index === currentTab ? el.focusIcon : el.icon}
-                <span className={index === currentTab ? "focused" : ""}>
+                <span
+                  className={router.pathname === el.content ? "focused" : ""}>
                   {el.name}
                 </span>
               </BottomButton>

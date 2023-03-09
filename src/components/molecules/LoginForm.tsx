@@ -13,7 +13,6 @@ const LoginForm: React.FC = () => {
   const [btndisabled, setbtndisabled] = useState(true);
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
-  const [isValidUser, setIsValidUser] = useState(false);
 
   const onClickSignUp = () => {
     router.push("/signup");

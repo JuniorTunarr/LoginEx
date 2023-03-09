@@ -29,10 +29,11 @@ const Wrap = styled.div`
 `;
 
 export default function Layout(props: ILayoutProps) {
+  const router = useRouter();
   return (
     <Wrap className="root">
-      <LayoutHeader />
-      {/* <LayoutBanner /> */}
+      {router.pathname !== ("/login" || "signup") ? <LayoutHeader /> : ""}
+      {router.pathname === "/" ? <LayoutBanner /> : ""}
       <style global jsx>{`
         html,
         body,
@@ -42,7 +43,7 @@ export default function Layout(props: ILayoutProps) {
         }
       `}</style>
       <Body>{props.children}</Body>
-      <LayoutFooter />
+      {router.pathname !== ("/login" || "signup") ? <LayoutFooter /> : ""}
     </Wrap>
   );
 }

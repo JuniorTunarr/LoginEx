@@ -10,6 +10,7 @@ import {
   debugErrorMap,
   prodErrorMap,
   browserPopupRedirectResolver,
+  connectAuthEmulator,
 } from "firebase/auth";
 
 const firebaseConfig = {
@@ -30,7 +31,6 @@ const storage = getStorage(app);
 export { app, db, storage };
 export const fbAuth = getAuth(app);
 export { createUserWithEmailAndPassword, signInWithEmailAndPassword };
-
 // export const auth = initializeAuth(app, {
 //   errorMap:
 //     process.env.NODE_ENV === "development" ? debugErrorMap : prodErrorMap,

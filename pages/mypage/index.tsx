@@ -33,7 +33,7 @@ export default function MypagePage() {
   // const user = Auth.currentUser;
   // console.log(user);
   useEffect(() => {
-    const result = Cookies.get("name");
+    const result = Cookies.get("id");
     if (result) {
       const resultData = result.replaceAll('"', "");
       setNick(resultData);
@@ -44,7 +44,7 @@ export default function MypagePage() {
   const onClickLogout = async () => {
     var result = confirm("로그아웃하시겠습니까?");
     if (result === true) {
-      Cookies.remove("name");
+      Cookies.remove("id");
       setIsLogin(false);
       await signOut(Auth);
       router.push("/mypage");
@@ -55,16 +55,16 @@ export default function MypagePage() {
   return (
     <>
       <MainHome>
-        {!isLogin ? (
-          <Link href="/login">
-            <Button>로그인</Button>
-          </Link>
-        ) : (
+        {isLogin ? (
           <>
             <div>환영합니다. {nick}님!</div>
 
             <Button onClick={onClickLogout}>로그아웃</Button>
           </>
+        ) : (
+          <Link href="/login">
+            <Button>로그인</Button>
+          </Link>
         )}
       </MainHome>
     </>

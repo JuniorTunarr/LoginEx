@@ -39,18 +39,17 @@ const LoginForm: React.FC = () => {
 
   // 로그인 검증 - 성공 . 기존 onChange -> onFinish
 
-  const onFinish = async (event) => {
-    const isValid = await signInWithEmailAndPassword(
+  const onFinish = async () => {
+    const credential = await signInWithEmailAndPassword(
       fbAuth,
       registerEmail,
       registerPassword
     )
       .then(() => {
-        console.log("Signed in successfully");
         if (typeof window !== "undefined") {
           Cookies.set("id", JSON.stringify(registerEmail));
-          Cookies.set("name", JSON.stringify(registerPassword));
         }
+        console.log("Saved Cookies successfully");
         router.push("/mypage");
       })
       .catch((error) => {
@@ -135,3 +134,8 @@ const LoginForm: React.FC = () => {
 };
 
 export default LoginForm;
+function axios(
+  arg0: string
+): { userData: any } | PromiseLike<{ userData: any }> {
+  throw new Error("Function not implemented.");
+}

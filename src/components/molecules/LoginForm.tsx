@@ -1,4 +1,4 @@
-import { fbAuth } from "@/firebase.config";
+import { db, fbAuth } from "@/firebase.config";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input } from "antd";
 import {
@@ -9,6 +9,7 @@ import {
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import { collection, getDocs, limit, query, where } from "firebase/firestore";
 
 const LoginForm: React.FC = () => {
   const router = useRouter();
@@ -18,6 +19,16 @@ const LoginForm: React.FC = () => {
   const [btndisabled, setbtndisabled] = useState(true);
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
+
+  const [name, setName] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [gender, setGender] = useState("");
+  const [birthdate, setBirthdate] = useState("");
+
+  const oneDayInMs = 24 * 60 * 60 * 1000; // one day in milliseconds
+  const options = { expires: new Date(Date.now() + oneDayInMs) };
 
   const onClickSignUp = () => {
     router.push("/signup");
@@ -45,12 +56,45 @@ const LoginForm: React.FC = () => {
       registerEmail,
       registerPassword
     )
-      .then(() => {
+      .then(async () => {
         if (typeof window !== "undefined") {
-          Cookies.set("id", JSON.stringify(registerEmail));
+          Cookies.set("id", JSON.stringify(registerEmail), options);
+          const currentUser = fbAuth.currentUser;
+          if (currentUser) {
+            const userEmail = currentUser.email;
+            // Create a query to filter documents by user EMAIL
+            const q = query(
+              collection(db, "users"),
+              where("email", "==", userEmail),
+              limit(1)
+            );
+
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach((doc) => {
+              const data = doc.data();
+              console.log(data);
+              setName(data.name);
+              setNickname(data.nickname);
+              setGender(data.gender);
+              setEmail(data.email);
+              setPhone(data.phone);
+              setBirthdate(data.birthdate);
+              if (typeof window !== "undefined") {
+                Cookies.set("name", JSON.stringify(data.name), options);
+                Cookies.set("nickname", JSON.stringify(data.nickname), options);
+                Cookies.set("gender", JSON.stringify(data.gender), options);
+                Cookies.set("email", JSON.stringify(data.email), options);
+                Cookies.set("phone", JSON.stringify(data.phone), options);
+                Cookies.set(
+                  "birthdate",
+                  JSON.stringify(data.birthdate),
+                  options
+                );
+              }
+            });
+            router.push("/mypage");
+          }
         }
-        console.log("Saved Cookies successfully");
-        router.push("/mypage");
       })
       .catch((error) => {
         switch (error.code) {
@@ -65,6 +109,45 @@ const LoginForm: React.FC = () => {
         }
       });
   };
+
+  // const getDocumentForCurrentUser = async () => {
+  //   try {
+  //     // Get the current user's ID
+  //     const currentUser = fbAuth.currentUser;
+  //     if (currentUser) {
+  //       const userEmail = currentUser.email;
+  //       // Create a query to filter documents by user EMAIL
+  //       const q = query(
+  //         collection(db, "users"),
+  //         where("email", "==", userEmail),
+  //         limit(1)
+  //       );
+
+  //       const querySnapshot = await getDocs(q);
+  //       querySnapshot.forEach((doc) => {
+  //         const data = doc.data();
+  //         console.log(data);
+  //         setName(data.name);
+  //         setNickname(data.nickname);
+  //         setGender(data.gender);
+  //         setEmail(data.email);
+  //         setPhone(data.phone);
+  //         setBirthdate(data.birthdate);
+  //         if (typeof window !== "undefined") {
+  //           Cookies.set("name", JSON.stringify(data.name), options);
+  //           Cookies.set("nickname", JSON.stringify(data.nickname), options);
+  //           Cookies.set("gender", JSON.stringify(data.gender), options);
+  //           Cookies.set("email", JSON.stringify(data.email), options);
+  //           Cookies.set("phone", JSON.stringify(data.phone), options);
+  //           Cookies.set("birthdate", JSON.stringify(data.birthdate), options);
+  //         }
+  //       });
+  //     }
+  //     router.push("/mypage");
+  //   } catch (error) {
+  //     console.error("Error getting document: ", error);
+  //   }
+  // };
 
   // 로그인 검증 - 실패
 

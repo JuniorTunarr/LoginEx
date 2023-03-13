@@ -43,44 +43,39 @@ export default function MypagePage() {
     const result = Cookies.get("id");
     if (result) {
       const resultData = result.replaceAll('"', "");
-      getDocumentForCurrentUser();
-      setNick(resultData);
       setIsLogin(true);
-    }
-  }, []);
-  const getDocumentForCurrentUser = async () => {
-    try {
-      // Get the current user's ID
-      const currentUser = fbAuth.currentUser;
-      const userEmail = currentUser.email;
-
-      // Create a query to filter documents by user EMAIL
-      const q = query(
-        collection(db, "users"),
-        where("email", "==", userEmail),
-        limit(1)
+      const decodeName = JSON.parse(decodeURIComponent(Cookies.get("name")));
+      const decodeNickname = JSON.parse(
+        decodeURIComponent(Cookies.get("nickname"))
+      );
+      const decodeGender = JSON.parse(
+        decodeURIComponent(Cookies.get("gender"))
+      );
+      const decodeEmail = JSON.parse(decodeURIComponent(Cookies.get("email")));
+      const decodePhone = JSON.parse(decodeURIComponent(Cookies.get("phone")));
+      const decodeBirthdate = JSON.parse(
+        decodeURIComponent(Cookies.get("birthdate"))
       );
 
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        console.log(data);
-
-        setName(data.name);
-        setNickname(data.nickname);
-        setGender(data.gender);
-        setEmail(data.email);
-        setPhone(data.phone);
-        setBirthdate(data.birthdate);
-      });
-    } catch (error) {
-      console.error("Error getting document: ", error);
+      setName(decodeName);
+      setNickname(decodeNickname);
+      setGender(decodeGender);
+      setEmail(decodeEmail);
+      setPhone(decodePhone);
+      setBirthdate(decodeBirthdate);
+      setNick(resultData);
     }
-  };
+  }, [name, nickname, gender, email, phone, birthdate]);
   const onClickLogout = async () => {
     var result = confirm("로그아웃하시겠습니까?");
     if (result === true) {
       Cookies.remove("id");
+      Cookies.remove("name");
+      Cookies.remove("nickname");
+      Cookies.remove("gender");
+      Cookies.remove("email");
+      Cookies.remove("phone");
+      Cookies.remove("birthdate");
       setIsLogin(false);
       await signOut(Auth);
       router.push("/mypage");
@@ -94,7 +89,7 @@ export default function MypagePage() {
         {isLogin ? (
           <>
             <div>로그인한 유저 정보입니다.</div>
-            <br/>
+            <br />
             <div>이름: {name}</div>
             <div>닉네임: {nickname}</div>
             <div>성별: {gender}</div>

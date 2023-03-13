@@ -43,7 +43,7 @@ export default function Layout(props: ILayoutProps) {
         }
       `}</style>
       <Body>{props.children}</Body>
-      {router.pathname !== ("/login" || "/signup") ? <LayoutFooter /> : ""}
+      {router.pathname !== "/login" ? <LayoutFooter /> : ""}
     </Wrap>
   );
 }

@@ -6,48 +6,55 @@ import { SearchOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import Image from "next/image";
 import Logo from "../../../../../public/assets/images/top_logo.jpg";
 import { useCallback, useLayoutEffect, useRef } from "react";
-
+import { useRouter } from "next/router";
+import TotheBack from "../../../../../public/assets/icons/back-arrow.png";
 const Wrapper = styled.div`
   background-color: rgb(255, 255, 255);
   position: sticky;
   height: 45px;
   width: 100%;
   z-index: 10;
-  border-top: 1px solid rgb(214, 214, 214);
   /* transform: translate3d(0,-116px,1px); */
 `;
 export default function LayoutHeader() {
+  const router = useRouter();
   return (
-    <Wrapper>
-      <header className={styles.header}>
-        <div>
-          <div className={styles.headerWrap}>
-            <a className={styles.logo}>
-              <span>
-                <Image
-                  src={Logo}
-                  alt="로고"
-                  width={90}
-                  height={30}
-                  style={{ objectFit: "cover", paddingTop: "3px" }}
-                  priority
-                />
-              </span>
-            </a>
-            <div style={{ width: "315px", height: "0px" }} />
-            <button className={styles.button}>
-              <span>
-                <SearchOutlined style={{ fontSize: "24px" }} />
-              </span>
-            </button>
-            <button className={styles.button}>
-              <span>
-                <ShoppingCartOutlined style={{ fontSize: "24px" }} />
-              </span>
-            </button>
-          </div>
-        </div>
-      </header>
-    </Wrapper>
+    <>
+      {router.pathname !== "/signup" ? (
+        <Wrapper>
+          <header className={styles.header}>
+            <div>
+              <div className={styles.headerWrap}>
+                <a className={styles.logo}>
+                  <span>
+                    <Image
+                      src={Logo}
+                      alt="로고"
+                      width={90}
+                      height={30}
+                      style={{ objectFit: "cover", paddingTop: "3px" }}
+                      priority
+                    />
+                  </span>
+                </a>
+                <div style={{ width: "315px", height: "0px" }} />
+                <button className={styles.button}>
+                  <span>
+                    <SearchOutlined style={{ fontSize: "24px" }} />
+                  </span>
+                </button>
+                <button className={styles.button}>
+                  <span>
+                    <ShoppingCartOutlined style={{ fontSize: "24px" }} />
+                  </span>
+                </button>
+              </div>
+            </div>
+          </header>
+        </Wrapper>
+      ) : (
+        ""
+      )}
+    </>
   );
 }

@@ -1,0 +1,85 @@
+.progress-bar-tabs {
+  height: 100% !important;
+  list-style-type: none;
+}
+
+.progress-bar-tabs .react-tabs__tab-list {
+  display: flex;
+  justify-content: space-between;
+  border: none;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  list-style: none;
+}
+
+.progress-bar-tabs .react-tabs__tab {
+  position: relative;
+  flex: 1;
+  text-align: center;
+  list-style: none;
+  padding: 10px 0;
+  color: #9ad3fe;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.progress-bar-tabs .react-tabs__tab::before {
+  position: absolute;
+  top: 50%;
+  left: -50%;
+  width: 100%;
+  height: 2px;
+  background-color: #ccc;
+  transform: translateY(-50%);
+  z-index: -1;
+  list-style-type: none;
+}
+
+.focused {
+  color: #9ad3fe;
+  font-weight: bold;
+  text-decoration: underline;
+  text-underline-offset: 0.5rem;
+  text-decoration-thickness: 2px;
+}
+
+.container {
+  width: 100px;
+}
+
+.container select {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  font-family: "Noto Sansf KR", sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+
+  color: #444;
+  background-color: #fff;
+
+  padding: 0.6em 1.4em 0.5em 0.8em;
+  margin: 0;
+
+  border: 1px solid #aaa;
+  border-radius: 0.5em;
+  box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.04);
+}
+
+.container select:hover {
+  border-color: #888;
+}
+.container select:focus {
+  border-color: #aaa;
+  box-shadow: 0 0 1px 3px rgba(59, 153, 252, 0.7);
+  box-shadow: 0 0 0 3px -moz-mac-focusring;
+  color: #222;
+  outline: none;
+}
+
+.container select:disabled {
+  opacity: 0.5;
+}

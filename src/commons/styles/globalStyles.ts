@@ -19,6 +19,10 @@ export const globalStyles = css`
   .root {
     height: 100% !important;
   }
+  ul {
+    list-style-type: none;
+    list-style:
+  }
   /* @font-face {
     font-family: "myfont";
     src: url("/fonts/scifibit.ttf");

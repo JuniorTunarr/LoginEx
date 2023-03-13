@@ -1,204 +1,207 @@
-// SignupForm.tsx
+import React, { LegacyRef } from "react";
+import { useState, useRef } from "react";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import "react-tabs/style/react-tabs.css";
 
-import React from "react";
-import styled from "styled-components";
-import { Button, Checkbox, Form, Input } from "antd";
-import { Controller, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import FormErrorMessage from "@/src/components/atoms/error/FormErrorMessage";
-import { createUserWithEmailAndPassword, db, fbAuth } from "@/firebase.config";
-import { useRouter } from "next/router";
-import { useState } from "react";
-import { collection, addDoc } from "firebase/firestore";
-
-// Types
-type SignUpInputType = {
-  email: string;
-  nickname: string;
-  password: string;
-  password2: string;
-  term: boolean;
-};
-
-// styled components
-const StyledSignUpForm = styled(Form)`
-  > div:not(:first-child) {
-    margin-top: 20px; // ID 인풋박스만 제외하고
-  }
-
-  > div:not(:last-child) {
-    position: relative; // 버튼 박스만 제외하고
-  }
-
-  > div > label {
-    display: inline-block;
-    padding-bottom: 8px;
-  }
-`;
-// yup
-const signUpValidation = yup.object({
-  nickname: yup
-    .string()
-    .required("닉네임을 입력해주세요.")
-    .max(15, "닉네임은 15자리 이하여야 합니다.")
-    .min(2, "닉네임은 2자리 이상이어야 합니다."),
-  email: yup
-    .string()
-    .required("아이디를 입력해주세요.")
-    .email("이메일 형식이 아닙니다.")
-    .max(12, "아이디는 12자리 이하여야 합니다.")
-    .min(4, "아이디는 4자리 이상이어야 합니다."),
-  password: yup
-    .string()
-    .required("비밀번호를 입력해주세요.")
-    .max(15, "비밀번호는 15자리 이하여야 합니다.")
-    .min(8, "비밀번호는 8자리 이상이어야 합니다.")
-    .matches(
-      /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,15}$/,
-      "영문 숫자포함 8자리를 입력해주세요."
-    ),
-  password2: yup
-    .string()
-    .oneOf([yup.ref("password"), null], "비밀번호가 일치하지 않습니다."),
-  term: yup.boolean().oneOf([true], "약관에 동의해주세요."),
-});
-// export
-function SignUpForm() {
-  const router = useRouter();
-  const [newAccount, setNewAccount] = useState(true);
-  const [errorFromSubmit, setErrorFromSubmit] = useState("");
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    control,
-  } = useForm<SignUpInputType>({
-    resolver: yupResolver(signUpValidation),
-    mode: "onBlur",
-    reValidateMode: "onChange",
-  });
-
-  const onSubmit = async (data: any) => {
-    try {
-      if (newAccount) {
-        // create account
-        const createUser = await createUserWithEmailAndPassword(
-          fbAuth,
-          data.email,
-          data.password
-        );
-        const docRef = await addDoc(collection(db, "users"), {
-          name: data.name,
-          email: data.email,
-        });
-        alert("회원가입이 완료되었습니다.");
-        router.push({ pathname: "/login" });
-      } else {
-        alert("이미 가입된 계정이 있습니다.");
-      }
-    } catch (error) {
-      setErrorFromSubmit(error.message);
-    }
+const ProgressBar = ({ percent }: { percent: number }) => {
+  const progressStyle = {
+    width: `${percent}%`,
+    height: "20px",
+    backgroundColor: "green",
   };
 
   return (
-    <StyledSignUpForm onFinish={onSubmit} size="large">
-      <div>
-        <label htmlFor="email">아이디</label>
-        <Controller
-          name="email"
-          control={control}
-          defaultValue=""
-          render={({ field }) => (
-            <Input
-              {...field}
-              placeholder="아이디(이메일)를 입력해주세요."
+    <div>
+      <div style={progressStyle}></div>
+    </div>
+  );
+};
+
+export default function SignUpForm() {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [phone, setPhone] = useState<string>("");
+  const [nickname, setNickname] = useState<string>("");
+  const [birthdate, setBirthdate] = useState<string>("");
+  const [gender, setGender] = useState<string>("");
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+
+  const inputRefs = useRef<(HTMLInputElement | HTMLSelectElement)[]>([
+    React.createRef<HTMLInputElement | HTMLSelectElement>(),
+    React.createRef<HTMLInputElement | HTMLSelectElement>(),
+    React.createRef<HTMLInputElement | HTMLSelectElement>(),
+    React.createRef<HTMLInputElement | HTMLSelectElement>(),
+    React.createRef<HTMLInputElement | HTMLSelectElement>(),
+    React.createRef<HTMLInputElement | HTMLSelectElement>(),
+    React.createRef<HTMLInputElement | HTMLSelectElement>(),
+  ]);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    switch (name) {
+      case "email":
+        setEmail(value);
+        break;
+      case "password":
+        setPassword(value);
+        break;
+      case "name":
+        setName(value);
+        break;
+      case "phone":
+        setPhone(value);
+        break;
+      case "nickname":
+        setNickname(value);
+        break;
+      case "birthdate":
+        setBirthdate(value);
+        break;
+      case "gender":
+        setGender(value);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleNextClick = (): void => {
+    const nextIndex = currentIndex + 1;
+    setCurrentIndex(nextIndex);
+    inputRefs.current[nextIndex]?.focus();
+  };
+
+  const getProgressPercent = (): number => {
+    const filledInputs = [
+      email,
+      password,
+      name,
+      phone,
+      nickname,
+      birthdate,
+      gender,
+    ].filter(Boolean);
+    return (filledInputs.length / 7) * 100; // there are 7 input fields in total
+  };
+
+  const isValid =
+    email && password && name && phone && nickname && birthdate && gender;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Submitted");
+    // handle form submission logic here
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <Tabs selectedIndex={currentIndex}>
+        <TabList>
+          <Tab>Email</Tab>
+          <Tab>Password</Tab>
+          <Tab>Name</Tab>
+          <Tab>Phone</Tab>
+          <Tab>Nickname</Tab>
+          <Tab>Birthdate</Tab>
+          <Tab>Gender</Tab>
+        </TabList>
+        <TabPanel>
+          <div>
+            <label htmlFor="email">Email:</label>
+            <input
               type="email"
+              name="email"
+              value={email}
+              onChange={handleInputChange}
+              ref={inputRefs.current[0]}
             />
-          )}
-        />
-        {errors.email && (
-          <FormErrorMessage errorMessage={errors.email.message} />
-        )}
-      </div>
-      <div>
-        <label htmlFor="nickname">닉네임</label>
-        <Controller
-          render={({ field }) => (
-            <Input
-              {...field}
-              placeholder="닉네임을 입력해주세요."
+          </div>
+          <button onClick={handleNextClick}>Next</button>
+        </TabPanel>
+        <TabPanel>
+          <div>
+            <label htmlFor="password">Password:</label>
+            <input
+              type="password"
+              name="password"
+              value={password}
+              onChange={handleInputChange}
+              ref={inputRefs.current[1]}
+            />
+          </div>
+          <button onClick={handleNextClick}>Next</button>
+        </TabPanel>
+        <TabPanel>
+          <div>
+            <label htmlFor="name">Name:</label>
+            <input
               type="text"
+              name="name"
+              value={name}
+              onChange={handleInputChange}
+              ref={inputRefs.current[2]}
             />
-          )}
-          name="nickname"
-          control={control}
-          defaultValue=""
-        />
-        {errors.nickname && (
-          <FormErrorMessage errorMessage={errors.nickname.message} />
-        )}
-      </div>
-      <div>
-        <label htmlFor="password">비밀번호</label>
-        <Controller
-          name="password"
-          control={control}
-          defaultValue=""
-          render={({ field }) => (
-            <Input
-              {...field}
-              type="password"
-              placeholder="비밀번호를 입력해주세요."
+          </div>
+        </TabPanel>
+        <TabPanel>
+          <div>
+            <label htmlFor="phone">Phone:</label>
+            <input
+              type="text"
+              name="phone"
+              value={phone}
+              onChange={handleInputChange}
+              ref={inputRefs.current[3]}
             />
-          )}
-        />
-        {errors.password && (
-          <FormErrorMessage errorMessage={errors.password.message} />
-        )}
-      </div>
-      <div>
-        <label htmlFor="password2">비밀번호</label>
-        <Controller
-          name="password2"
-          control={control}
-          defaultValue=""
-          render={({ field }) => (
-            <Input
-              {...field}
-              type="password"
-              placeholder="비밀번호를 확인해주세요."
+          </div>
+          <button onClick={handleNextClick}>Next</button>
+        </TabPanel>
+        <TabPanel>
+          <div>
+            <label htmlFor="nickname">Nickname:</label>
+            <input
+              type="text"
+              name="nickname"
+              value={nickname}
+              onChange={handleInputChange}
+              ref={inputRefs.current[4]}
             />
-          )}
-        />
-        {errors.password2 && (
-          <FormErrorMessage errorMessage={errors.password2.message} />
-        )}
-      </div>
-      <div>
-        <Controller
-          name="term"
-          control={control}
-          defaultValue={false}
-          render={({ field: { onChange, value } }) => (
-            <Checkbox
-              onChange={(e) => onChange(e.target.checked)}
-              checked={value}>
-              약관에 동의합니다.
-            </Checkbox>
-          )}
-        />
-        {errors.term && <FormErrorMessage errorMessage={errors.term.message} />}
-      </div>
-      <div>
-        <Button type="primary" htmlType="submit" block>
-          가입하기
-        </Button>
-      </div>
-    </StyledSignUpForm>
+          </div>
+          <button onClick={handleNextClick}>Next</button>
+        </TabPanel>
+        <TabPanel>
+          <div>
+            <label htmlFor="birthdate">Birthdate:</label>
+            <input
+              type="date"
+              name="birthdate"
+              value={birthdate}
+              onChange={handleInputChange}
+              ref={inputRefs.current[5]}
+            />
+          </div>
+          <button onClick={handleNextClick}>Next</button>
+        </TabPanel>
+        <TabPanel>
+          <div>
+            <label htmlFor="gender">Gender:</label>
+            <select
+              name="gender"
+              value={gender}
+              onChange={handleInputChange}
+              ref={inputRefs.current[6]}>
+              <option value="">Select your gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <button onClick={handleSubmit} disabled={!isValid}>
+            Submit
+          </button>
+        </TabPanel>
+      </Tabs>
+      <ProgressBar percent={getProgressPercent()} />
+    </form>
   );
 }
-
-export default SignUpForm;

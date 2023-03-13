@@ -16,6 +16,9 @@ import {
 import styles from "./LayoutFooter.module.css";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import SignUpButton from "@/src/components/atoms/Button/SignupButton";
+import TotheBack from "../../../../../public/assets/icons/back-arrow.png";
+import Image from "next/image";
 
 const Wrapper = styled.div`
   background-color: rgb(255, 255, 255);
@@ -104,30 +107,37 @@ export default function LayoutFooter() {
   const onClickTab = (index: any) => {
     setCurrentTab(index);
     router.push(menuArr[index].content);
-    // menuArr[index].name === "마이페이지";
-    // ?
-    // : router.push(menuArr[index].content);
   };
   return (
-    <Wrapper>
-      <Nav className={styles.Nav}>
-        <Ul className={styles.Ul}>
-          <Li className={styles.Li}>
-            {menuArr.map((el, index) => (
-              <BottomButton
-                key={index}
-                onClick={() => onClickTab(index)}
-                className={styles.Button}>
-                {index === currentTab ? el.focusIcon : el.icon}
-                <span
-                  className={router.pathname === el.content ? "focused" : ""}>
-                  {el.name}
-                </span>
-              </BottomButton>
-            ))}
-          </Li>
-        </Ul>
-      </Nav>
-    </Wrapper>
+    <>
+      {router.pathname !== "/signup" ? (
+        <Wrapper>
+          <Nav className={styles.Nav}>
+            <Ul className={styles.Ul}>
+              <Li className={styles.Li}>
+                {menuArr.map((el, index) => (
+                  <BottomButton
+                    key={index}
+                    onClick={() => onClickTab(index)}
+                    className={styles.Button}>
+                    {index === currentTab ? el.focusIcon : el.icon}
+                    <span
+                      className={
+                        router.pathname === el.content ? "focused" : ""
+                      }>
+                      {el.name}
+                    </span>
+                  </BottomButton>
+                ))}
+              </Li>
+            </Ul>
+          </Nav>
+        </Wrapper>
+      ) : (
+        // <Wrapper>
+        ""
+        // </Wrapper>
+      )}
+    </>
   );
 }

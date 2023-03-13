@@ -18,14 +18,19 @@ const MainHome = styled.div`
   width: 500px !important;
   height: 100% !important;
 `;
-const CancelButton = styled(CloseOutlined)`
+const CancelButton = styled.button`
   top: 0 !important;
   left: 0 !important;
   right: 10 !important;
   bottom: 0 !important;
   position: absolute;
-  background
-  fontsize: 24px;
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  border: none;
+  (CloseOutlined) {
+    fontsize: 24px;
+  }
 `;
 
 export default function LoginPage() {
@@ -33,24 +38,15 @@ export default function LoginPage() {
   // const auth = getAuth();
   const router = useRouter();
   // const { data: session } = useSession();
-
-  const onClickCancel = () => {
-    router.push("/mypage");
-  };
   return (
     <>
       {" "}
       <MainHome>
-        <CancelButton>
-          <button
-            style={{
-              backgroundColor: "transparent",
-              border: "none",
-              top: "0px",
-              left: "0px",
-            }}
-            onClick={onClickCancel}
-          />
+        <CancelButton
+          onClick={() => {
+            router.back();
+          }}>
+          <CloseOutlined></CloseOutlined>
         </CancelButton>
         <Image
           src={Logo}

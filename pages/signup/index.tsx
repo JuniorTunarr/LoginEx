@@ -16,7 +16,7 @@ import { useEffect, useRef } from "react";
 import Logo from "../../public/assets/images/top_logo.jpg";
 import TotheBack from "../../public/assets/icons/back-arrow.png";
 import { fbAuth, db } from "@/firebase.config";
-import * as S from "./SignUpPage_style";
+import * as S from "../../src/commons/styles/signUpPage_style";
 
 interface FormValue {
   name: string;

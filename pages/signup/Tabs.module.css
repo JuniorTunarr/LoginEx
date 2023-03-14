@@ -83,3 +83,7 @@
 .container select:disabled {
   opacity: 0.5;
 }
+
+button:disabled {
+  background-color: gray;
+}

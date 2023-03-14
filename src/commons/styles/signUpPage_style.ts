@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import { ButtonHTMLAttributes } from "react";
 
 export const Wrapper = styled.div`
   background-color: rgb(255, 255, 255);
@@ -55,7 +54,6 @@ export const StyledButton = styled.button`
   font-style: normal;
   letter-spacing: normal;
   font-stretch: normal;
-  background-color: ${({ disabled }) => (!disabled ? "#9ad3fe;" : "gray")};
 `;
 export const ButtonWrap = styled.div`
   max-width: 500px !important;

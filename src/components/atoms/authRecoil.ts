@@ -1,16 +1,16 @@
-//authRecoil.ts
-
+//authRecoil.js
 import { atom } from "recoil";
 
-export const authState = atom({
+const authState = atom({
   key: "authState",
   default: null,
   // TypeError: Cannot freeze 방지
   dangerouslyAllowMutability: true,
 });
 
-export const isLogInState = atom({
-  key: "isLogInState",
+export const isLoggedInState = atom({
+  key: "isLoggedInState",
   default: false,
 });
 
+export default authState;

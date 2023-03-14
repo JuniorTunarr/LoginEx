@@ -1,9 +1,13 @@
 import LayoutBanner from "./banner";
 import LayoutFooter from "./footer";
 import LayoutHeader from "./header";
-import LayoutNavigation from "./navigation";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
+import { useRecoilState } from "recoil";
+import { authState, isLogInState } from "@/src/commons/context/authRecoil";
+import { useEffect, useState } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { fbAuth } from "@/firebase.config";
 
 interface ILayoutProps {
   children: JSX.Element;
@@ -30,6 +34,27 @@ const Wrap = styled.div`
 
 export default function Layout(props: ILayoutProps) {
   const router = useRouter();
+  const [auth, setAuth] = useRecoilState(authState);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoggedInState, setIsLoggedInState] = useRecoilState(isLogInState);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(fbAuth, (user) => {
+      if (user) {
+        user.getIdToken().then(function (idToken) {
+          // <------ Check this line
+          console.log(idToken); // It shows the Firebase token now
+        });
+        setAuth(user.getIdToken());
+        setIsLoggedInState(true);
+      } else {
+        setAuth(null);
+        setIsLoggedInState(false);
+      }
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
   return (
     <Wrap className="root">
       {router.pathname !== ("/login" || "/signup") ? <LayoutHeader /> : ""}

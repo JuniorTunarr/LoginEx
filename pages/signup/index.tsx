@@ -121,11 +121,6 @@ export default function SignUpPage() {
   // 모든 input 입력후 submit시 firebase에 올라감
 
   const onSubmit = async (data: any) => {
-    console.log(inputs);
-    console.log(getValues("name"));
-    console.log(getValues("birthdate"));
-    console.log(getValues("password"));
-    console.log(getValues("passwordConfirm"));
     try {
       let userData;
       if (newAccount) {
@@ -135,6 +130,7 @@ export default function SignUpPage() {
           getValues("email"),
           getValues("password")
         );
+        // firebase에 올릴 양식
         const docRef = await addDoc(collection(db, "users"), {
           name: getValues("name"),
           email: getValues("email"),
@@ -162,6 +158,8 @@ export default function SignUpPage() {
       setErrorFromSubmit(error.message);
     }
   };
+
+  // 각 input 값 핸들링
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;

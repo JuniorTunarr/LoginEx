@@ -1,7 +1,14 @@
 import styled from "@emotion/styled";
 import { fbAuth } from "@/firebase.config";
 import { useEffect, useState } from "react";
-import { onAuthStateChanged } from "firebase/auth";
+import {
+  browserSessionPersistence,
+  onAuthStateChanged,
+  setPersistence,
+} from "firebase/auth";
+import { useRecoilState } from "recoil";
+import { isLogInState } from "../src/commons/context/authRecoil";
+import authState from "@/src/components/atoms/authRecoil";
 const MainHome = styled.div`
   justify-content: center;
   align-items: center;
@@ -10,19 +17,27 @@ const MainHome = styled.div`
 `;
 
 export default function Home() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const credential = setPersistence(fbAuth, browserSessionPersistence);
+  const [isLoggedInState, setIsLoggedInState] = useRecoilState(isLogInState);
+  const [auth, setAuth] = useRecoilState(authState);
   useEffect(() => {
-    onAuthStateChanged(fbAuth, (user) => {
+    const unsubscribe = onAuthStateChanged(fbAuth, (user) => {
       if (user) {
-        setIsLoggedIn(true);
+        user.getIdToken().then(function (idToken) {
+          // <------ Check this line
+          console.log(idToken); // It shows the Firebase token now
+        });
+        setAuth(user.getIdToken());
+        setIsLoggedInState(true);
       } else {
-        setIsLoggedIn(false);
+        setAuth(null);
+        setIsLoggedInState(false);
       }
     });
   }, []);
   return (
     <>
-      {isLoggedIn ? (
+      {isLoggedInState ? (
         <MainHome>홈 화면입니당(로그인O)</MainHome>
       ) : (
         <MainHome>홈 화면입니당(로그인X)</MainHome>

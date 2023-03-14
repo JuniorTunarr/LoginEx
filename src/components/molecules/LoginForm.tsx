@@ -2,33 +2,28 @@ import { db, fbAuth } from "@/firebase.config";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input } from "antd";
 import {
-  browserLocalPersistence,
+  browserSessionPersistence,
+  onIdTokenChanged,
   setPersistence,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import { collection, getDocs, limit, query, where } from "firebase/firestore";
-
+import { useRecoilState } from "recoil";
+import authState from "../atoms/authRecoil";
+import { isLogInState } from "@/src/commons/context/authRecoil";
 const LoginForm: React.FC = () => {
   const router = useRouter();
   const [form] = Form.useForm();
+
+  const [auth, setAuth] = useRecoilState(authState);
   console.log(fbAuth);
 
   const [btndisabled, setbtndisabled] = useState(true);
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
-
-  const [name, setName] = useState("");
-  const [nickname, setNickname] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [gender, setGender] = useState("");
-  const [birthdate, setBirthdate] = useState("");
-
-  const oneDayInMs = 24 * 60 * 60 * 1000; // one day in milliseconds
-  const options = { expires: new Date(Date.now() + oneDayInMs) };
+  const [isLoggedInState, setIsLoggedInState] = useRecoilState(isLogInState);
 
   const onClickSignUp = () => {
     router.push("/signup");
@@ -51,103 +46,38 @@ const LoginForm: React.FC = () => {
   // 로그인 검증 - 성공 . 기존 onChange -> onFinish
 
   const onFinish = async () => {
-    const credential = await signInWithEmailAndPassword(
+    const credential = await setPersistence(
       fbAuth,
-      registerEmail,
-      registerPassword
-    )
-      .then(async () => {
-        if (typeof window !== "undefined") {
-          Cookies.set("id", JSON.stringify(registerEmail), options);
-          const currentUser = fbAuth.currentUser;
-          if (currentUser) {
-            const userEmail = currentUser.email;
-            // Create a query to filter documents by user EMAIL
-            const q = query(
-              collection(db, "users"),
-              where("email", "==", userEmail),
-              limit(1)
-            );
-
-            const querySnapshot = await getDocs(q);
-            querySnapshot.forEach((doc) => {
-              const data = doc.data();
-              console.log(data);
-              setName(data.name);
-              setNickname(data.nickname);
-              setGender(data.gender);
-              setEmail(data.email);
-              setPhone(data.phone);
-              setBirthdate(data.birthdate);
-              if (typeof window !== "undefined") {
-                Cookies.set("name", JSON.stringify(data.name), options);
-                Cookies.set("nickname", JSON.stringify(data.nickname), options);
-                Cookies.set("gender", JSON.stringify(data.gender), options);
-                Cookies.set("email", JSON.stringify(data.email), options);
-                Cookies.set("phone", JSON.stringify(data.phone), options);
-                Cookies.set(
-                  "birthdate",
-                  JSON.stringify(data.birthdate),
-                  options
-                );
-              }
-            });
-            router.push("/mypage");
+      browserSessionPersistence
+    ).then(() => {
+      return signInWithEmailAndPassword(fbAuth, registerEmail, registerPassword)
+        .then(async () => {
+          if (typeof window !== "undefined") {
+            const currentUser = fbAuth.currentUser;
+            console.log(currentUser);
+            if (currentUser) {
+              console.log(currentUser);
+              setAuth(currentUser.getIdToken());
+              setIsLoggedInState(true);
+              router.push("/mypage");
+            }
           }
-        }
-      })
-      .catch((error) => {
-        switch (error.code) {
-          case "auth/wrong-password":
-            return alert("이메일 혹은 비밀번호가 일치하지 않습니다.");
-          case "auth/user-not-found":
-            return alert("일치하는 사용자가 없습니다.");
-          case "auth/internal-error":
-            return alert("잘못된 요청입니다.");
-          default:
-            return alert("로그인에 실패 하였습니다.");
-        }
-      });
+        })
+        .catch((error) => {
+          switch (error.code) {
+            case "auth/wrong-password":
+              return alert("이메일 혹은 비밀번호가 일치하지 않습니다.");
+            case "auth/user-not-found":
+              return alert("일치하는 사용자가 없습니다.");
+            case "auth/internal-error":
+              return alert("잘못된 요청입니다.");
+            default:
+              return alert("로그인에 실패 하였습니다.");
+          }
+        });
+    });
+    credential;
   };
-
-  // const getDocumentForCurrentUser = async () => {
-  //   try {
-  //     // Get the current user's ID
-  //     const currentUser = fbAuth.currentUser;
-  //     if (currentUser) {
-  //       const userEmail = currentUser.email;
-  //       // Create a query to filter documents by user EMAIL
-  //       const q = query(
-  //         collection(db, "users"),
-  //         where("email", "==", userEmail),
-  //         limit(1)
-  //       );
-
-  //       const querySnapshot = await getDocs(q);
-  //       querySnapshot.forEach((doc) => {
-  //         const data = doc.data();
-  //         console.log(data);
-  //         setName(data.name);
-  //         setNickname(data.nickname);
-  //         setGender(data.gender);
-  //         setEmail(data.email);
-  //         setPhone(data.phone);
-  //         setBirthdate(data.birthdate);
-  //         if (typeof window !== "undefined") {
-  //           Cookies.set("name", JSON.stringify(data.name), options);
-  //           Cookies.set("nickname", JSON.stringify(data.nickname), options);
-  //           Cookies.set("gender", JSON.stringify(data.gender), options);
-  //           Cookies.set("email", JSON.stringify(data.email), options);
-  //           Cookies.set("phone", JSON.stringify(data.phone), options);
-  //           Cookies.set("birthdate", JSON.stringify(data.birthdate), options);
-  //         }
-  //       });
-  //     }
-  //     router.push("/mypage");
-  //   } catch (error) {
-  //     console.error("Error getting document: ", error);
-  //   }
-  // };
 
   // 로그인 검증 - 실패
 

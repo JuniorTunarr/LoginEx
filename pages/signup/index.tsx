@@ -18,15 +18,6 @@ import TotheBack from "../../public/assets/icons/back-arrow.png";
 import { fbAuth, db } from "@/firebase.config";
 import * as S from "./SignUpPage_style";
 
-const Wrapper = styled.div`
-  background-color: rgb(255, 255, 255);
-  position: sticky;
-  height: 45px;
-  width: 100%;
-  z-index: 10;
-  /* transform: translate3d(0,-116px,1px); */
-`;
-
 interface FormValue {
   name: string;
   email: string;
@@ -37,11 +28,6 @@ interface FormValue {
   birthdate: string;
   gender: string;
 }
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  isDisabled?: boolean | FieldError;
-  // other props as needed
-}
-
 export default function SignUpPage() {
   const router = useRouter();
   const [isValid, setIsValid] = useState(false);
@@ -188,7 +174,7 @@ export default function SignUpPage() {
 
   return (
     <>
-      <Wrapper>
+      <S.Wrapper>
         <div>
           <Image
             src={TotheBack}
@@ -199,7 +185,7 @@ export default function SignUpPage() {
             onClick={handlePreviousClick}
           />
         </div>
-      </Wrapper>
+      </S.Wrapper>
       <S.MainHome>
         <div className="progress-bar-tabs">
           <Tabs

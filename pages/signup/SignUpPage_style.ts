@@ -1,11 +1,13 @@
 import styled from "@emotion/styled";
 import { ButtonHTMLAttributes } from "react";
-import Select from "react-select";
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  isDisabled?: boolean;
-  // other props as needed
-}
+export const Wrapper = styled.div`
+  background-color: rgb(255, 255, 255);
+  position: sticky;
+  height: 45px;
+  width: 100%;
+  z-index: 10;
+`;
 
 export const Label = styled.label`
   font-size: 14px;
@@ -40,7 +42,7 @@ export const StyledInput = styled.input`
   width: 300px;
   margin-top: 10px;
 `;
-export const StyledButton = styled.button<ButtonProps>`
+export const StyledButton = styled.button`
   width: 100% !important;
   height: 60px;
   background-color: #9ad3fe;

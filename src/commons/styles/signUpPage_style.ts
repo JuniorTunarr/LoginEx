@@ -44,7 +44,6 @@ export const StyledInput = styled.input`
 export const StyledButton = styled.button`
   width: 100% !important;
   height: 60px;
-  background-color: #9ad3fe;
   border-radius: 0;
   border: none;
   font-size: 15px;
@@ -54,6 +53,7 @@ export const StyledButton = styled.button`
   font-style: normal;
   letter-spacing: normal;
   font-stretch: normal;
+  background-color: ${(props) => (props.disabled ? "gray" : "#9ad3fe")};
 `;
 export const ButtonWrap = styled.div`
   max-width: 500px !important;
